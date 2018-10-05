@@ -19,7 +19,7 @@ class Sprint:
          self.fact_legacy, self.fact_user_happiness, self.fact_money) = 0, 0, 0, 0, 0, 0
 
     @staticmethod
-    def set_random_sprint_desired_options(self):
+    def set_random_sprint_desired_options():
         with open(SPRINTS_FILE, encoding="utf-8") as jfile:
             sprints = json.loads(jfile.read())
         chosen_sprint = random.randint(1, len(sprints))
@@ -37,6 +37,10 @@ class Sprint:
         }
         return description
 
-    def apply_action_to_sprint(self, action_external_name, action_answers):
-
-        pass
+    def apply_action_to_sprint(self, action):
+        self.fact_tasks += action.mods[0]
+        self.fact_bugs += action.mods[1]
+        self.fact_important_tasks += action.mods[2]
+        self.fact_legacy += action.mods[3]
+        self.fact_user_happiness += action.mods[4]
+        self.fact_money += action.mods[5]
