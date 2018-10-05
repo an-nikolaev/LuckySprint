@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import json
 
 from config import CLASSES_FILE, RACES_FILE
@@ -10,6 +13,7 @@ class Character:
         self.char_class = char_class
         self.char_race = char_race
 
+        # внутреннее обозначение
         self.int_class = ""
         self.int_race = ""
 
@@ -21,17 +25,23 @@ class Character:
         self.responsibility = 0
         self.connections = 0
 
+        self.map_class_race_to_internal()
+        self.set_class_mods()
+        self.set_race_mods()
+
     def map_class_race_to_internal(self):
         with open(CLASSES_FILE) as jfile:
             classes_json = json.loads(jfile.read())
         with open(RACES_FILE) as jfile:
             races_json = json.loads(jfile.read())
         for item in races_json:
+            print(races_json[item]["external_name"], self.char_race)
             if races_json[item]["external_name"] == self.char_race:
                 self.int_race = item
             else:
                 print("UNKNOWN RACE!!!!")
-        for item in races_json:
+        for item in classes_json:
+            print(classes_json[item]["external_name"], self.char_class)
             if classes_json[item]["external_name"] == self.char_class:
                 self.int_class = item
             else:
@@ -60,5 +70,14 @@ class Character:
 
     def get_char_description(self):
         description = {
+            "class": self.char_class,
+            "race": self.char_race,
+            "communication": self.communication,
+            "reputation": self.reputation,
+            "skill": self.skill,
+            "knowledge": self.knowledge,
+            "responsibility": self.responsibility,
+            "connections": self.connections
         }
+        # print(json.dumps(description))
         return description

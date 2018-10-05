@@ -1,5 +1,7 @@
 {
-  "class1": {"mods":[0, 1, 1, 0, 0, 0], "external_name": ""},
-  "class2": {"mods":[1, 0, 1, 0, 0, 0], "external_name": ""},
-  "class3": {"mods":[0, 0, 0, 1, 1, 0], "external_name": ""}
+  "teamlead": {"mods":[0, 1, 1, 0, 0, 0], "external_name": "Тимлядина"},
+  "devops": {"mods":[1, 0, 1, 0, 0, 0], "external_name": "DevOpsина"},
+  "go": {"mods":[0, 0, 0, 1, 1, 0], "external_name": "Go-goерша"},
+  "dotnet": {"mods":[1, 0, 1, 0, 0, 1], "external_name": "DotNetесса"},
+  "qa": {"mods":[1, 0, 0, 1, 1, 0], "external_name": "Куашка"}
 }

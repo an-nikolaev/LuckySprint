@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import json
 
 from config import CLASSES_FILE, RACES_FILE
