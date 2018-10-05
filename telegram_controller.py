@@ -30,6 +30,8 @@ class SprintStarter(telepot.helper.ChatHandler):
         self._questions = self._gc.get_questions()
         self._current_question_num = 0
         self._answers = {}
+        self._sent = None
+        self._editor = None
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -37,7 +39,7 @@ class SprintStarter(telepot.helper.ChatHandler):
         info(self._username, 'started new iteration')
 
         if not self._is_sprint_started:
-            self.sender.sendMessage(
+            self._sent = self.sender.sendMessage(
                 'Нажмите, чтобы начать спринт',
                 reply_markup=InlineKeyboardMarkup(
                     inline_keyboard=[[
@@ -46,7 +48,7 @@ class SprintStarter(telepot.helper.ChatHandler):
                 )
             )
         else:
-            self.sender.sendMessage('Кнопки жми давай, не понимаю рукописных ответов')
+            self.sender.sendMessage('Кнопки жми давай, не понимаю рукописных ответов! 😠')
 
     def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -54,8 +56,12 @@ class SprintStarter(telepot.helper.ChatHandler):
 
         if query_data == 'start':
             self._is_sprint_started = True
+            self._editor = telepot.helper.Editor(self.bot, self._sent)
+            self._editor.editMessageText('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
         else:
             self._answers[self._current_question_num] = query_data
+            self._editor = telepot.helper.Editor(self.bot, self._sent)
+            self._editor.editMessageText('``` Выбрано: ' + query_data + '```', parse_mode='Markdown')
             self._current_question_num += 1
 
         if self._current_question_num < len(self._questions):
@@ -75,7 +81,7 @@ class SprintStarter(telepot.helper.ChatHandler):
         choices = self._questions[self._current_question_num]['answers']
         info(self._username, 'question: ' + question + '; choices: ' + str(choices))
 
-        self.sender.sendMessage(
+        self._sent = self.sender.sendMessage(
             question,
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[[InlineKeyboardButton(text=str(c), callback_data=str(c))] for c in choices]
