@@ -6,4 +6,4 @@ RACES_FILE = "data/races.json"
 SPRINTS_FILE = "data/sprints.json"
 ACTIONS_FILE = "data/actions.json"
 
-token=''
+token = ''
