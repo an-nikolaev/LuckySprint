@@ -1,0 +1,5 @@
+{
+  "class1": {"mods":[0, 1, 1, 0, 0, 0], "external_name": ""},
+  "class2": {"mods":[1, 0, 1, 0, 0, 0], "external_name": ""},
+  "class3": {"mods":[0, 0, 0, 1, 1, 0], "external_name": ""}
+}
