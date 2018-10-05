@@ -25,6 +25,9 @@ class Character:
         self.responsibility = 0
         self.connections = 0
 
+        self.skills = [self.communication, self.reputation, self.skill, self.knowledge,
+                       self.responsibility, self.connections]
+
         self.map_class_race_to_internal()
         self.set_class_mods()
         self.set_race_mods()

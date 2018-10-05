@@ -17,7 +17,14 @@ class Action:
 
         self.mods = self.get_default_mods()
 
-        self.get_final_mods()
+        self.char_skills = []
+        self.success_mods = []
+        self.fail_mods = []
+
+        self.get_answer_info()
+
+        self.final_success_mods = [d + m for d, m in zip(self.get_default_mods(), self.success_mods)]
+        self.final_fail_mods = [d + m for d, m in zip(self.get_default_mods(), self.fail_mods)]
 
     def get_internal_name(self):
         with open(ACTIONS_FILE, encoding="utf-8") as jfile:
@@ -31,13 +38,18 @@ class Action:
             actions_json = json.loads(jfile.read())
         return actions_json[self.internal_name]["default_mods"]
 
-    def get_final_mods(self):
+    def get_answer_info(self):
         with open(ACTIONS_FILE, encoding="utf-8") as jfile:
             actions_json = json.loads(jfile.read())
         for item in actions_json[self.internal_name]["answers"]:
             if item == self.action_answer:
-                for i in range(len(self.mods)):
-                    self.mods[i] += actions_json[self.internal_name]["answers"][item][i]
+                self.char_skills = self.get_answer_skills()
+                self.success_mods = actions_json[self.internal_name]["answers"][self.action_answer]["success"]
+                self.fail_mods = actions_json[self.internal_name]["answers"][self.action_answer]["fail"]
 
-    def get_action_mods(self):
-        return self.mods
+    def get_answer_skills(self):
+        with open(ACTIONS_FILE, encoding="utf-8") as jfile:
+            actions_json = json.loads(jfile.read())
+        answer_skills = actions_json[self.internal_name]["answers"][self.action_answer]["skills"]
+        return answer_skills
+
