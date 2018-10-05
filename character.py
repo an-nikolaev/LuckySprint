@@ -30,22 +30,18 @@ class Character:
         self.set_race_mods()
 
     def map_class_race_to_internal(self):
-        with open(CLASSES_FILE) as jfile:
+        with open(CLASSES_FILE, encoding="utf-8") as jfile:
             classes_json = json.loads(jfile.read())
-        with open(RACES_FILE) as jfile:
+        with open(RACES_FILE, encoding="utf-8") as jfile:
             races_json = json.loads(jfile.read())
         for item in races_json:
-            print(races_json[item]["external_name"], self.char_race)
             if races_json[item]["external_name"] == self.char_race:
                 self.int_race = item
-            else:
-                print("UNKNOWN RACE!!!!")
         for item in classes_json:
-            print(classes_json[item]["external_name"], self.char_class)
             if classes_json[item]["external_name"] == self.char_class:
                 self.int_class = item
-            else:
-                print("UNKNOWN CLASS!!!!")
+        if self.int_class == "" or self.int_race == "":
+            print("RACE or CLASS stated is unknown. Race, class stated: {}, {}".format(self.char_race, self.char_class))
 
     def modify_chars(self, json_data, key):
         self.communication += json_data[key]["mods"][0]
@@ -56,12 +52,12 @@ class Character:
         self.connections += json_data[key]["mods"][5]
 
     def set_class_mods(self):
-        with open(CLASSES_FILE) as jfile:
+        with open(CLASSES_FILE, encoding="utf-8") as jfile:
             classes_json = json.loads(jfile.read())
         self.modify_chars(classes_json, self.int_class)
 
     def set_race_mods(self):
-        with open(RACES_FILE) as jfile:
+        with open(RACES_FILE, encoding="utf-8") as jfile:
             races_json = json.loads(jfile.read())
         self.modify_chars(races_json, self.int_race)
 
