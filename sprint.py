@@ -26,7 +26,7 @@ class Sprint:
     def set_random_sprint_desired_options():
         with open(SPRINTS_FILE, encoding="utf-8") as jfile:
             sprints = json.loads(jfile.read())
-        chosen_sprint = random.randint(1, len(sprints))
+        chosen_sprint = random.randint(0, len(sprints) - 1)
         return sprints[chosen_sprint]
 
     def get_sprint_description(self):

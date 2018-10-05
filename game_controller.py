@@ -41,8 +41,8 @@ class GameController:
     def calculate_results(self, answers):
         char = Character(answers[1], answers[0])
         sprint = Sprint(char)
-        actions_answers = {self.chosen_actions[0]: answers[2], self.chosen_actions[1]: answers[3],
-                           self.chosen_actions[2]: answers[4]}
+        actions_answers = {next(iter(self.chosen_actions[0])): answers[2], next(iter(self.chosen_actions[1])): answers[3],
+                           next(iter(self.chosen_actions[2])): answers[4]}
         for action_name in actions_answers:
             action = Action(action_name, actions_answers[action_name])
             sprint.apply_action_to_sprint(action)
