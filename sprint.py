@@ -42,6 +42,7 @@ class Sprint:
         return description
 
     def apply_action_to_sprint(self, action):
+        # тут механика про то какие модификаторы брать у действия
         modificator = 0
         for i in range(4):
             modificator += random.randint(-1, 1)
@@ -59,6 +60,7 @@ class Sprint:
         self.fact_money += mods[5]
 
     def compare_with_desired(self):
+        # логика как считать общий результат спринта
         total_result = False
         if self.fact_tasks >= self.tasks and self.fact_important_tasks >= self.important_tasks:
             total_result = True
@@ -66,6 +68,7 @@ class Sprint:
             total_result = False
         if self.fact_legacy > self.legacy and self.fact_user_happiness < self.user_happiness:
             total_result = False
+
         self.results["Общий результат"] = "Вы отлично справились!" if total_result else "У вас ничего не получилось. Вы уволены."
         self.results["Количество выпущенных задач"] = "Фактически: {}, Ожидалось: {}".format(self.fact_tasks, self.tasks)
         self.results["Наплодили багов"] = "Фактически: {}, Ожидалось: {}".format(self.fact_bugs, self.bugs)
