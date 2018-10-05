@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from character import Character
+from sprint import Sprint
+from util import get_external_classes, get_external_races
+
 
 class GameController:
     def __init__(self):
@@ -12,7 +16,12 @@ class GameController:
                 0:
                     {
                         'question': 'Выбери расу, выбирай мудро',
-                        'answers': [('Go-Go-ерша', 0), ('Мудро', 1), ('Олег', 2)]
+                        'answers': get_external_races()
+                    },
+                1:
+                    {
+                        'question': 'Выбери класс, выбирай мудро',
+                        'answers': get_external_classes()
                     }
             }
         return questions
@@ -20,3 +29,7 @@ class GameController:
     def get_results(self, answers):
         answers[999] = 999
         return str(answers)
+
+    def calculate_results(self, answers):
+        char = Character(answers[1], answers[0])
+        sprint = Sprint()
