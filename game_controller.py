@@ -29,7 +29,7 @@ class GameController:
         for i in range(2, 2 + NUMBER_OF_ACTIONS):
             questions[i] = {
                 'question': next(iter(actions_with_answers[i - 2])),
-                'answers': list(next(iter(actions_with_answers[i - 2])))
+                'answers': list(actions_with_answers[i - 2][next(iter(actions_with_answers[i - 2]))].keys())
             }
         return questions
 
@@ -39,5 +39,5 @@ class GameController:
 
     def calculate_results(self, answers):
         char = Character(answers[1], answers[0])
-        sprint = Sprint()
+        sprint = Sprint(char)
 

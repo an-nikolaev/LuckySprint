@@ -28,6 +28,6 @@ def get_external_races():
 def get_random_actions_with_answers():
     with open(ACTIONS_FILE, encoding="utf-8") as jfile:
         actions_json = json.loads(jfile.read())
-    actions_names = random.sample(list(actions_json.keys()), 2)
+    actions_names = random.sample(list(actions_json.keys()), NUMBER_OF_ACTIONS)
     actions_and_answers = [{actions_json[name]["external_name"]: actions_json[name]["answers"]} for name in actions_names]
     return actions_and_answers
