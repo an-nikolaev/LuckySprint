@@ -1,7 +1,7 @@
 {
-  "reliable": {"mods":[1, 1, 1, 1, 0, 0], "external_name": "Отказоустойчивая"},
-  "object": {"mods":[0, 1, 0, 1, 0, 1], "external_name": "Объектноориентированная"},
-  "backend": {"mods":[0, 1, 1, 0, 0, 0], "external_name": "Согласная на бэкенд"},
-  "race4": {"mods":[0, 1, 1, 0, 0, 1], "external_name": ""},
-  "race5": {"mods":[0, 1, 1, 0, 0, 0], "external_name": ""}
+  "reliable": {"mods":[1, 1, 0, 0, 1, 0], "external_name": "Отказоустойчивая"},
+  "object": {"mods":[0, 1, 1, 1, 0, 0], "external_name": "Объектноориентированная"},
+  "backend": {"mods":[0, 1, 1, 0, 1, 0], "external_name": "Согласная на бэкенд"},
+  "race4": {"mods":[1, 0, 1, 0, 0, 1], "external_name": ""},
+  "race5": {"mods":[0, 0, 1, 1, 1, 0], "external_name": ""}
 }
