@@ -5,17 +5,26 @@ import sys
 import time
 import telepot
 import telepot.helper
+import logging
+from datetime import datetime
 from game_controller import GameController
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.delegate import (
     per_chat_id, create_open, pave_event_space, include_callback_query_chat_id)
 
+logging.basicConfig(filename=datetime.now().strftime('%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
+
+
+def info(user, s):
+    return logging.info(str(datetime.now().strftime('%H:%M:%S')) + ', user: ' + user + ': ' + s)
+
 
 class SprintStarter(telepot.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(SprintStarter, self).__init__(*args, **kwargs)
 
+        self._username = ''
         self._is_sprint_started = False
         self._gc = GameController()
         self._questions = self._gc.get_questions()
@@ -24,6 +33,8 @@ class SprintStarter(telepot.helper.ChatHandler):
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
+        self._username = msg['from']['first_name']
+        info(self._username, 'started new iteration')
 
         if not self._is_sprint_started:
             self.sender.sendMessage(
@@ -39,6 +50,7 @@ class SprintStarter(telepot.helper.ChatHandler):
 
     def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+        info(self._username, 'callback: ' + query_data)
 
         if query_data == 'start':
             self._is_sprint_started = True
@@ -50,8 +62,10 @@ class SprintStarter(telepot.helper.ChatHandler):
             self._show_next_question()
 
         else:
+            result = self._gc.get_results(self._answers)
+            info(self._username, 'Total result: ' + result)
             self.sender.sendMessage(
-                self._gc.get_results(self._answers),
+                result,
                 reply_markup=None)
             self._is_sprint_started = False
             self.close()
@@ -59,26 +73,19 @@ class SprintStarter(telepot.helper.ChatHandler):
     def _show_next_question(self):
         question = self._questions[self._current_question_num]['question']
         choices = self._questions[self._current_question_num]['answers']
-        print(choices)
+        info(self._username, 'question: ' + question + '; choices: ' + str(choices))
 
-        print(list(map(lambda c: InlineKeyboardButton(text=str(c), callback_data=str(c)),
-                             choices)))
         self.sender.sendMessage(
             question,
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[[InlineKeyboardButton(text=str(c), callback_data=str(c))] for c in choices]
-                # [
-                #     list([map(lambda c: InlineKeyboardButton(text=str(c), callback_data=str(c)),
-                #              choices)])
-                # ], resize_keyboard=True, one_time_keyboard=True
-
             )
         )
 
 
 TOKEN = sys.argv[1]
 
-telepot.api.set_proxy('https://190.152.14.122:32356')
+telepot.api.set_proxy('https://186.148.169.82:50797')
 
 bot = telepot.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
