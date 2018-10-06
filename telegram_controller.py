@@ -72,7 +72,11 @@ class SprintStarter(telepot.helper.ChatHandler):
             info(self._username, 'Total result: ' + result)
             self.sender.sendMessage(
                 result,
-                reply_markup=None)
+                reply_markup=None,
+                parse_mode='Markdown')
+            self.sender.sendMessage(
+                "А теперь ты можешь попробовать найти нормальную работу на hh.ru!"
+            )
             self._is_sprint_started = False
             self.close()
 
