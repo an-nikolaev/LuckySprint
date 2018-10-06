@@ -14,7 +14,7 @@ from telepot.delegate import (
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-from game_controller import GameController
+from game_controller import GameController, get_character_questions
 
 logging.basicConfig(filename=datetime.now().strftime('logs/%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
 
@@ -28,13 +28,17 @@ class SprintStarter(telepot.helper.ChatHandler):
         super(SprintStarter, self).__init__(*args, **kwargs)
 
         self._username = ''
+        self._is_character_created = False
         self._is_sprint_started = False
         self._gc = GameController()
+        self._character_questions = get_character_questions()
         self._questions = self._gc.get_questions()
         self._current_question_num = 0
+        self._character_answers = {}
         self._answers = {}
         self._sent = None
         self._editor = None
+        self.question = None
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -66,11 +70,20 @@ class SprintStarter(telepot.helper.ChatHandler):
             self._editor.deleteMessage()
             self.sender.sendMessage('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
         else:
-            self._answers[self._current_question_num] = query_data
+            if not self._is_character_created:
+                self._character_answers[self._current_question_num] = query_data
+                self._current_question_num += 1
+                if self._current_question_num == 2:
+                    self._is_character_created = True
+                    self._current_question_num = 0
+                    self._gc.create_character(self._character_answers)
+            else:
+                self._answers[self._current_question_num] = query_data
+                self._gc.set_answer({self.question: query_data})
+                self._current_question_num += 1
 
             self._editor = telepot.helper.Editor(self.bot, self._sent)
             self._editor.editMessageText('``` Твое решение: ' + query_data + '```', parse_mode='Markdown')
-            self._current_question_num += 1
 
         if self._current_question_num < len(self._questions):
             self._show_next_question()
@@ -89,12 +102,14 @@ class SprintStarter(telepot.helper.ChatHandler):
             self.close()
 
     def _show_next_question(self):
-        question = self._questions[self._current_question_num]['question']
-        choices = self._questions[self._current_question_num]['answers']
-        info(self._username, 'question: ' + question + '; choices: ' + str(choices))
+        self.question = self._questions[self._current_question_num]['question'] if self._is_character_created else \
+            self._character_questions[self._current_question_num]['question']
+        choices = self._questions[self._current_question_num]['answers'] if self._is_character_created else \
+            self._character_questions[self._current_question_num]['answers']
+        info(self._username, 'question: ' + self.question + '; choices: ' + str(choices))
 
         self._sent = self.sender.sendMessage(
-            question,
+            self.question,
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[[InlineKeyboardButton(text=str(c), callback_data=str(c))] for c in choices]
             )
@@ -103,7 +118,7 @@ class SprintStarter(telepot.helper.ChatHandler):
 
 TOKEN = sys.argv[1]
 
-telepot.api.set_proxy('https://37.252.67.184:49693')
+telepot.api.set_proxy('https://80.35.23.103:54881')
 
 bot = telepot.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
