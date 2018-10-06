@@ -1,7 +1,7 @@
 {
   "reliable": {"mods":[1, 1, 0, 0, 1, 0], "external_name": "Отказоустойчивая"},
-  "object": {"mods":[0, 1, 1, 1, 0, 0], "external_name": "Объектноориентированная"},
-  "backend": {"mods":[0, 1, 1, 0, 1, 0], "external_name": "Согласная на бэкенд"},
-  "race4": {"mods":[1, 0, 1, 0, 0, 1], "external_name": "Любитель конференций"},
+  "object": {"mods":[0, 1, 1, 1, 0, 0], "external_name": "Объектнориентированная"},
+  "backend": {"mods":[0, 1, 1, 0, 1, 0], "external_name": "Согласный на бэкенд"},
+  "race4": {"mods":[1, 0, 1, 0, 0, 1], "external_name": "Митапофил"},
   "race5": {"mods":[0, 0, 1, 1, 1, 0], "external_name": "Ботаник обычный"}
 }
