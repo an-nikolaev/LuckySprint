@@ -7,7 +7,7 @@ SPRINTS_FILE = "data/sprints.json"
 ACTIONS_FILE = "data/actions.json"
 RESULT_FILE = "data/result.json"
 NUMBER_OF_ACTIONS = 3
-DIFFICULTY = 3
+DIFFICULTY = 2
 
 
 token = ''
