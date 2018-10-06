@@ -39,9 +39,11 @@ class GameController:
         return str(answers)
 
     def calculate_results(self, answers):
-        char = Character(answers[1], answers[0])
+        char = Character(answers[0], answers[1])
         sprint = Sprint(char)
-        actions_answers = {next(iter(self.chosen_actions[0])): answers[2], next(iter(self.chosen_actions[1])): answers[3],
+        # TODO: адаптировать код под количество вопросов в настройках
+        actions_answers = {next(iter(self.chosen_actions[0])): answers[2],
+                           next(iter(self.chosen_actions[1])): answers[3],
                            next(iter(self.chosen_actions[2])): answers[4]}
         for action_name in actions_answers:
             action = Action(action_name, actions_answers[action_name])
@@ -49,4 +51,3 @@ class GameController:
 
         results = sprint.compare_with_desired()
         return results
-
