@@ -103,6 +103,15 @@ class Sprint:
         else:
             self.results["Заработали миллионов $ для компании"] = "{}".format(result_json['money']['win'])
 
-        self.results["Общий результат"] = "Вы отлично справились! Работаем дальше" if total_result \
-            else "У вас ничего не получилось. Вы уволены."
-        return self.results
+        self.results["Общий результат"] = "*Вы отлично справились! Работаем дальше*" if total_result \
+            else "*У вас ничего не получилось. Вы уволены*."
+
+        result_msg2 = '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' % (
+            self.results['Общий результат'],
+            self.results["Количество выпущенных задач"],
+            self.results["Наплодили багов"],
+            self.results["Сделано важных задач"],
+            self.results["Добавили тысяч строк легаси кода"],
+            self.results["Индекс радости пользователей"],
+            self.results["Заработали миллионов $ для компании"])
+        return result_msg2, total_result

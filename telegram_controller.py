@@ -36,10 +36,8 @@ class SprintStarter(telepot.helper.ChatHandler):
         self._gc = GameController()
         self._character_questions = get_character_questions()
         self._questions = self._gc.get_questions()
-        print(self._questions)
         self._current_question_num = 0
         self._character_answers = {}
-        self._answers = {}
         self._sent = None
         self._editor = None
         self.question = None
@@ -86,7 +84,6 @@ class SprintStarter(telepot.helper.ChatHandler):
                     self._gc.create_character(self._character_answers)
 
             else:
-                self._answers[self._current_question_num] = query_data
                 result_msg = self._gc.set_answer({self.question: query_data})
 
                 self._editor = telepot.helper.Editor(self.bot, self._sent)
@@ -100,14 +97,24 @@ class SprintStarter(telepot.helper.ChatHandler):
             self._show_next_question()
 
         else:
-            result = pp.pformat(self._gc.get_results(self._answers))
-            info(self._username, 'Total result: ' + result)
+            result, is_win = self._gc.get_results()
+            info(self._username, 'Total result: ' + str(result))
+            if is_win:
+                self._sent = self.sender.sendPhoto(
+                    imgs['success'],
+                    caption='🎉')
+            else:
+                self._sent = self.sender.sendPhoto(
+                    imgs['fail'],
+                    caption='😕')
+
             self.sender.sendMessage(
-                result,
+                str(result),
                 reply_markup=None,
                 parse_mode='Markdown')
             self.sender.sendMessage(
-                "А теперь ты можешь попробовать найти нормальную работу на hh.ru!"
+                "А теперь ты можешь попробовать найти *нормальную* работу на hh.ru!",
+                parse_mode='Markdown'
             )
             self._is_sprint_started = False
             self.close()

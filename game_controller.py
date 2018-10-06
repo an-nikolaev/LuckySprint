@@ -41,9 +41,9 @@ class GameController:
             }
         return questions
 
-    def get_results(self, answers):
-        answers["results"] = self.calculate_results()
-        return answers
+    def get_results(self):
+        msg, total_result = self.calculate_results()
+        return msg, total_result
 
     def create_character(self, character_answers):
         char = Character(character_answers[0], character_answers[1])
@@ -55,5 +55,5 @@ class GameController:
         return self.sprint.apply_action_to_sprint(action)
 
     def calculate_results(self):
-        results = self.sprint.compare_with_desired()
-        return results
+        results, total_result = self.sprint.compare_with_desired()
+        return results, total_result
