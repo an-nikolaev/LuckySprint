@@ -40,16 +40,18 @@ class SprintStarter(telepot.helper.ChatHandler):
         content_type, chat_type, chat_id = telepot.glance(msg)
         pp.pprint(msg)
         self._username = msg['from']['first_name']
-        info(self._username, 'started new iteration: ' + msg['text'])
+        info(self._username, 'started new iteration: ' + msg['text'] if (content_type == 'text') else '')
 
         if not self._is_sprint_started:
-            self.sender.sendPhoto('AgADAgAD-KkxG2TkyUluwtbim69_EOPRtw4ABJ_PE--dwgoF2YUEAAEC',
-                                  caption='Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
-                                  reply_markup=InlineKeyboardMarkup(
-                                      inline_keyboard=[[
-                                          InlineKeyboardButton(text='Начать спринт', callback_data='start'),
-                                      ]]
-                                  ))
+            self._sent = self.sender.sendPhoto(
+                'AgADAgAD-KkxG2TkyUluwtbim69_EOPRtw4ABJ_PE--dwgoF2YUEAAEC',
+                caption='Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[[
+                        InlineKeyboardButton(text='Начать спринт',
+                                             callback_data='start'),
+                    ]]
+                ))
 
         else:
             self.sender.sendMessage('Кнопки жми давай, не понимаю рукописных ответов! 😠')
@@ -58,9 +60,10 @@ class SprintStarter(telepot.helper.ChatHandler):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
         info(self._username, 'callback: ' + query_data)
 
-        if query_data == 'start' and not self._is_sprint_started:
+        if query_data == 'start':
             self._is_sprint_started = True
             self._editor = telepot.helper.Editor(self.bot, self._sent)
+            self._editor.deleteMessage()
             self.sender.sendMessage('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
         else:
             self._answers[self._current_question_num] = query_data
@@ -100,7 +103,7 @@ class SprintStarter(telepot.helper.ChatHandler):
 
 TOKEN = sys.argv[1]
 
-telepot.api.set_proxy('https://186.148.169.82:50797')
+telepot.api.set_proxy('https://37.252.67.184:49693')
 
 bot = telepot.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
