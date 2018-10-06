@@ -23,8 +23,10 @@ class Action:
 
         self.get_answer_info()
 
-        self.final_success_mods = [d + m for d, m in zip(self.get_default_mods(), self.success_mods[0])]
-        self.final_fail_mods = [d + m for d, m in zip(self.get_default_mods(), self.fail_mods[0])]
+        self.final_success_mods = [d + m for d, m in zip(self.get_default_mods(),
+                                                         self.success_mods[0])]
+        self.final_fail_mods = [d + m for d, m in zip(self.get_default_mods(),
+                                                      self.fail_mods[0])]
 
     def get_internal_name(self):
         with open(ACTIONS_FILE, encoding="utf-8") as jfile:
@@ -52,4 +54,3 @@ class Action:
             actions_json = json.loads(jfile.read())
         answer_skills = actions_json[self.internal_name]["answers"][self.action_answer]["skills"]
         return answer_skills
-

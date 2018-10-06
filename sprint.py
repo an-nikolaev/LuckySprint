@@ -75,7 +75,6 @@ class Sprint:
             total_result = False
 
         result_json = self.get_result_translations()
-        self.results["Общий результат"] = "Вы отлично справились! Работаем дальше" if total_result else "У вас ничего не получилось. Вы уволены."
         if self.fact_tasks < self.tasks:
             self.results["Количество выпущенных задач"] = "{}".format(result_json['tasks']['fail'])
         else:
@@ -100,4 +99,7 @@ class Sprint:
             self.results["Заработали миллионов $ для компании"] = "{}".format(result_json['money']['fail'])
         else:
             self.results["Заработали миллионов $ для компании"] = "{}".format(result_json['money']['win'])
+
+        self.results["Общий результат"] = "Вы отлично справились! Работаем дальше" if total_result \
+            else "У вас ничего не получилось. Вы уволены."
         return self.results
