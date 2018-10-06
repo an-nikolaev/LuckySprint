@@ -75,14 +75,29 @@ class Sprint:
             total_result = False
 
         result_json = self.get_result_translations()
-        self.results["Общий результат"] = "Вы отлично справились!" if total_result else "У вас ничего не получилось. Вы уволены."
+        self.results["Общий результат"] = "Вы отлично справились! Работаем дальше" if total_result else "У вас ничего не получилось. Вы уволены."
         if self.fact_tasks < self.tasks:
             self.results["Количество выпущенных задач"] = "{}".format(result_json['tasks']['fail'])
         else:
             self.results["Количество выпущенных задач"] = "{}".format(result_json['tasks']['win'])
-        self.results["Наплодили багов"] = "Фактически: {}, Ожидалось: {}".format(self.fact_bugs, self.bugs)
-        self.results["Сделано важных задач"] = "Фактически: {}, Ожидалось: {}".format(self.fact_important_tasks, self.important_tasks)
-        self.results["Добавили тысяч строк легаси кода"] = "Фактически: {}, Ожидалось: {}".format(self.fact_legacy, self.legacy)
-        self.results["Индекс радости пользователей"] = "Фактически: {}, Ожидалось: {}".format(self.fact_user_happiness, self.user_happiness)
-        self.results["Заработали миллионов $ для компании"] = "Фактически: {}, Ожидалось: {}".format(self.fact_money, self.money)
+        if self.fact_bugs < self.bugs:
+            self.results["Наплодили багов"] = "{}".format(result_json['bugs']['fail'])
+        else:
+            self.results["Наплодили багов"] = "{}".format(result_json['bugs']['win'])
+        if self.fact_important_tasks < self.important_tasks:
+            self.results["Сделано важных задач"] = "{}".format(result_json['important_tasks']['fail'])
+        else:
+            self.results["Сделано важных задач"] = "{}".format(result_json['important_tasks']['win'])
+        if self.fact_legacy < self.legacy:
+            self.results["Добавили тысяч строк легаси кода"] = "{}".format(result_json['legacy']['fail'])
+        else:
+            self.results["Добавили тысяч строк легаси кода"] = "{}".format(result_json['legacy']['win'])
+        if self.fact_user_happiness < self.user_happiness:
+            self.results["Индекс радости пользователей"] = "{}".format(result_json['user_happiness']['fail'])
+        else:
+            self.results["Индекс радости пользователей"] = "{}".format(result_json['user_happiness']['win'])
+        if self.fact_money < self.money:
+            self.results["Заработали миллионов $ для компании"] = "{}".format(result_json['money']['fail'])
+        else:
+            self.results["Заработали миллионов $ для компании"] = "{}".format(result_json['money']['win'])
         return self.results
