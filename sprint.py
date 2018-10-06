@@ -4,7 +4,7 @@
 import json
 import random
 
-from config import SPRINTS_FILE, DIFFICULTY
+from config import SPRINTS_FILE, DIFFICULTY, RESULT_FILE
 
 
 class Sprint:
@@ -28,6 +28,11 @@ class Sprint:
             sprints = json.loads(jfile.read())
         chosen_sprint = random.randint(0, len(sprints) - 1)
         return sprints[chosen_sprint]
+
+    def get_result_translations(self):
+        with open(RESULT_FILE, encoding="utf-8") as jfile:
+            result_json = json.loads(jfile.read())
+        return result_json
 
     def get_sprint_description(self):
         description = {
@@ -69,8 +74,12 @@ class Sprint:
         if self.fact_legacy > self.legacy and self.fact_user_happiness < self.user_happiness:
             total_result = False
 
+        result_json = self.get_result_translations()
         self.results["Общий результат"] = "Вы отлично справились!" if total_result else "У вас ничего не получилось. Вы уволены."
-        self.results["Количество выпущенных задач"] = "Фактически: {}, Ожидалось: {}".format(self.fact_tasks, self.tasks)
+        if self.fact_tasks < self.tasks:
+            self.results["Количество выпущенных задач"] = "{}".format(result_json['tasks']['fail'])
+        else:
+            self.results["Количество выпущенных задач"] = "{}".format(result_json['tasks']['win'])
         self.results["Наплодили багов"] = "Фактически: {}, Ожидалось: {}".format(self.fact_bugs, self.bugs)
         self.results["Сделано важных задач"] = "Фактически: {}, Ожидалось: {}".format(self.fact_important_tasks, self.important_tasks)
         self.results["Добавили тысяч строк легаси кода"] = "Фактически: {}, Ожидалось: {}".format(self.fact_legacy, self.legacy)
