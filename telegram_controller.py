@@ -1,19 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import logging
+import pprint as pp
 import sys
 import time
+from datetime import datetime
+
 import telepot
 import telepot.helper
-import logging
-from datetime import datetime
-from game_controller import GameController
-from telepot.loop import MessageLoop
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.delegate import (
     per_chat_id, create_open, pave_event_space, include_callback_query_chat_id)
+from telepot.loop import MessageLoop
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-logging.basicConfig(filename=datetime.now().strftime('%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
+from game_controller import GameController
+
+logging.basicConfig(filename=datetime.now().strftime('logs/%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
 
 
 def info(user, s):
@@ -35,18 +38,19 @@ class SprintStarter(telepot.helper.ChatHandler):
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
+        pp.pprint(msg)
         self._username = msg['from']['first_name']
-        info(self._username, 'started new iteration')
+        info(self._username, 'started new iteration: ' + msg['text'])
 
         if not self._is_sprint_started:
-            self._sent = self.sender.sendMessage(
-                'Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
-                reply_markup=InlineKeyboardMarkup(
-                    inline_keyboard=[[
-                        InlineKeyboardButton(text='Начать спринт', callback_data='start'),
-                    ]]
-                )
-            )
+            self.sender.sendPhoto('AgADAgAD-KkxG2TkyUluwtbim69_EOPRtw4ABJ_PE--dwgoF2YUEAAEC',
+                                  caption='Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
+                                  reply_markup=InlineKeyboardMarkup(
+                                      inline_keyboard=[[
+                                          InlineKeyboardButton(text='Начать спринт', callback_data='start'),
+                                      ]]
+                                  ))
+
         else:
             self.sender.sendMessage('Кнопки жми давай, не понимаю рукописных ответов! 😠')
 
@@ -54,12 +58,13 @@ class SprintStarter(telepot.helper.ChatHandler):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
         info(self._username, 'callback: ' + query_data)
 
-        if query_data == 'start':
+        if query_data == 'start' and not self._is_sprint_started:
             self._is_sprint_started = True
             self._editor = telepot.helper.Editor(self.bot, self._sent)
-            self._editor.editMessageText('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
+            self.sender.sendMessage('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
         else:
             self._answers[self._current_question_num] = query_data
+
             self._editor = telepot.helper.Editor(self.bot, self._sent)
             self._editor.editMessageText('``` Твое решение: ' + query_data + '```', parse_mode='Markdown')
             self._current_question_num += 1
@@ -68,7 +73,7 @@ class SprintStarter(telepot.helper.ChatHandler):
             self._show_next_question()
 
         else:
-            result = self._gc.get_results(self._answers)
+            result = pp.pformat(self._gc.get_results(self._answers))
             info(self._username, 'Total result: ' + result)
             self.sender.sendMessage(
                 result,

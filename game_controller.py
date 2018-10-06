@@ -36,7 +36,7 @@ class GameController:
 
     def get_results(self, answers):
         answers["results"] = self.calculate_results(answers)
-        return str(answers)
+        return answers
 
     def calculate_results(self, answers):
         char = Character(answers[0], answers[1])
