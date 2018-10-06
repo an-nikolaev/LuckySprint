@@ -14,9 +14,12 @@ from telepot.delegate import (
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
+from data.images_ids import get_img_dict
 from game_controller import GameController, get_character_questions
 
 logging.basicConfig(filename=datetime.now().strftime('logs/%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
+
+imgs = get_img_dict()
 
 
 def info(user, s):
@@ -33,6 +36,7 @@ class SprintStarter(telepot.helper.ChatHandler):
         self._gc = GameController()
         self._character_questions = get_character_questions()
         self._questions = self._gc.get_questions()
+        print(self._questions)
         self._current_question_num = 0
         self._character_answers = {}
         self._answers = {}
@@ -48,7 +52,7 @@ class SprintStarter(telepot.helper.ChatHandler):
 
         if not self._is_sprint_started:
             self._sent = self.sender.sendPhoto(
-                'AgADAgAD-KkxG2TkyUluwtbim69_EOPRtw4ABJ_PE--dwgoF2YUEAAEC',
+                imgs['welcome'],
                 caption='Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
                 reply_markup=InlineKeyboardMarkup(
                     inline_keyboard=[[
@@ -68,22 +72,29 @@ class SprintStarter(telepot.helper.ChatHandler):
             self._is_sprint_started = True
             self._editor = telepot.helper.Editor(self.bot, self._sent)
             self._editor.deleteMessage()
-            self.sender.sendMessage('*Спринт начался, погнали!* 🏎🎉👷', parse_mode='Markdown')
+            self.sender.sendMessage('*Спринт начался, погнали!* 🏎🛠👷', parse_mode='Markdown')
         else:
             if not self._is_character_created:
                 self._character_answers[self._current_question_num] = query_data
                 self._current_question_num += 1
+
+                self._editor = telepot.helper.Editor(self.bot, self._sent)
+                self._editor.editMessageText('``` Твое решение: ' + query_data + '```', parse_mode='Markdown')
                 if self._current_question_num == 2:
                     self._is_character_created = True
                     self._current_question_num = 0
                     self._gc.create_character(self._character_answers)
+
             else:
                 self._answers[self._current_question_num] = query_data
-                self._gc.set_answer({self.question: query_data})
-                self._current_question_num += 1
+                result_msg = self._gc.set_answer({self.question: query_data})
 
-            self._editor = telepot.helper.Editor(self.bot, self._sent)
-            self._editor.editMessageText('``` Твое решение: ' + query_data + '```', parse_mode='Markdown')
+                self._editor = telepot.helper.Editor(self.bot, self._sent)
+                self._editor.editMessageText('*Проблема*:\n%s\n\n*Твое решение*:\n%s\n\n*Результат*:\n%s' %
+                                             (self._questions[self._current_question_num]['question'], query_data,
+                                              result_msg), parse_mode='Markdown')
+
+                self._current_question_num += 1
 
         if self._current_question_num < len(self._questions):
             self._show_next_question()

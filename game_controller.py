@@ -28,9 +28,7 @@ def get_character_questions():
 class GameController:
     def __init__(self):
         self._test = 0
-        self.current_answer_num = 0
         self.chosen_actions = []
-        self.actions_answers = {}
         self.sprint = None
 
     def get_questions(self):
@@ -52,15 +50,10 @@ class GameController:
         self.sprint = Sprint(char)
 
     def set_answer(self, answer):
-        self.actions_answers[next(iter(answer))] = answer[next(iter(answer))]
-        self.current_answer_num += 1
+        action = Action(next(iter(answer)), answer[next(iter(answer))])
+
+        return self.sprint.apply_action_to_sprint(action)
 
     def calculate_results(self):
-        # TODO: адаптировать код под количество вопросов в настройках
-
-        for action_name in self.actions_answers:
-            action = Action(action_name, self.actions_answers[action_name])
-            self.sprint.apply_action_to_sprint(action)
-
         results = self.sprint.compare_with_desired()
         return results

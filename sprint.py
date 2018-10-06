@@ -64,6 +64,9 @@ class Sprint:
         self.fact_user_happiness += mods[4]
         self.fact_money += mods[5]
 
+        result_msg = action.success_mods[1] if action_success else action.fail_mods[1]
+        return result_msg
+
     def compare_with_desired(self):
         # логика как считать общий результат спринта
         total_result = False
