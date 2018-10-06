@@ -18,13 +18,13 @@ class GameController:
             {
                 0:
                     {
-                        'question': 'Выбери расу, выбирай мудро',
-                        'answers': get_external_races()
+                        'question': 'Выбери свою профессию, выбирай мудро.',
+                        'answers': get_external_classes()
                     },
                 1:
                     {
-                        'question': 'Выбери класс, выбирай мудро',
-                        'answers': get_external_classes()
+                        'question': 'Какими дополнительными качествами ты обладаешь?',
+                        'answers': get_external_races()
                     }
             }
         for i in range(2, 2 + NUMBER_OF_ACTIONS):

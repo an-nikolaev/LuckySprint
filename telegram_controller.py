@@ -40,7 +40,7 @@ class SprintStarter(telepot.helper.ChatHandler):
 
         if not self._is_sprint_started:
             self._sent = self.sender.sendMessage(
-                'Нажмите, чтобы начать спринт',
+                'Здравствуй, путник! Решил почуствовать себя разработчиком? Ну, нажимай...',
                 reply_markup=InlineKeyboardMarkup(
                     inline_keyboard=[[
                         InlineKeyboardButton(text='Начать спринт', callback_data='start'),
@@ -61,7 +61,7 @@ class SprintStarter(telepot.helper.ChatHandler):
         else:
             self._answers[self._current_question_num] = query_data
             self._editor = telepot.helper.Editor(self.bot, self._sent)
-            self._editor.editMessageText('``` Выбрано: ' + query_data + '```', parse_mode='Markdown')
+            self._editor.editMessageText('``` Твое решение: ' + query_data + '```', parse_mode='Markdown')
             self._current_question_num += 1
 
         if self._current_question_num < len(self._questions):
