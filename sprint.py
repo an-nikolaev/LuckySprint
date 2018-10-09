@@ -29,7 +29,8 @@ class Sprint:
         chosen_sprint = random.randint(0, len(sprints) - 1)
         return sprints[chosen_sprint]
 
-    def get_result_translations(self):
+    @staticmethod
+    def get_result_translations():
         with open(RESULT_FILE, encoding="utf-8") as jfile:
             result_json = json.loads(jfile.read())
         return result_json
@@ -51,6 +52,8 @@ class Sprint:
         modificator = 0
         for i in range(4):
             modificator += random.randint(-1, 1)
+            print('dice roll: ', modificator)
+        print('total modificator: ', modificator)
         action_success = False
         for skill_index in action.char_skills:
             char_versus = self.char.skills[skill_index] + modificator
@@ -69,7 +72,7 @@ class Sprint:
 
     def compare_with_desired(self):
         # логика как считать общий результат спринта
-        total_result = False
+        total_result = True
         if self.fact_tasks >= self.tasks and self.fact_important_tasks >= self.important_tasks:
             total_result = True
         if self.fact_bugs > self.bugs and self.fact_money < self.money:

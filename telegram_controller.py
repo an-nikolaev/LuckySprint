@@ -17,13 +17,22 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from data.images_ids import get_img_dict
 from game_controller import GameController, get_character_questions
 
-logging.basicConfig(filename=datetime.now().strftime('logs/%Y-%m-%d_%H-%M-%S.log'), level=logging.INFO)
+logging.basicConfig(filename=datetime.now().strftime('logs/%Y-%m-%d.log'), level=logging.INFO)
+logger = logging.getLogger('lucky_bot')
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 imgs = get_img_dict()
 
 
 def info(user, s):
-    return logging.info(str(datetime.now().strftime('%H:%M:%S')) + ', user: ' + user + ': ' + s)
+    return logger.info('user: ' + user + ': ' + s)
 
 
 class SprintStarter(telepot.helper.ChatHandler):
@@ -145,7 +154,7 @@ bot = telepot.DelegatorBot(TOKEN, [
 ])
 
 MessageLoop(bot).run_as_thread()
-print('Listening ...')
+info('Bot', 'Listening ...')
 
 while 1:
     time.sleep(10)
