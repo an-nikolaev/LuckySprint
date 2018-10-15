@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import random
 
 from config import CLASSES_FILE, RACES_FILE
 
@@ -31,6 +32,7 @@ class Character:
         self.map_class_race_to_internal()
         self.set_class_mods()
         self.set_race_mods()
+        self.set_random_mods()
 
     def map_class_race_to_internal(self):
         with open(CLASSES_FILE, encoding="utf-8") as jfile:
@@ -54,6 +56,14 @@ class Character:
         self.responsibility += json_data[key]["mods"][4]
         self.connections += json_data[key]["mods"][5]
 
+    def simple_modify_chars(self, mod_list):
+        self.communication += mod_list[0]
+        self.reputation += mod_list[1]
+        self.skill += mod_list[2]
+        self.knowledge += mod_list[3]
+        self.responsibility += mod_list[4]
+        self.connections += mod_list[5]
+
     def set_class_mods(self):
         with open(CLASSES_FILE, encoding="utf-8") as jfile:
             classes_json = json.loads(jfile.read())
@@ -63,6 +73,14 @@ class Character:
         with open(RACES_FILE, encoding="utf-8") as jfile:
             races_json = json.loads(jfile.read())
         self.modify_chars(races_json, self.int_race)
+
+    def set_random_mods(self):
+        random_mods = [0, 0, 0, 0, 0, 0]
+        while sum(random_mods) < 3:
+            index = random.randint(0, 6)
+            if random_mods[index] == 0:
+                random_mods[index] = 1
+        self.simple_modify_chars(random_mods)
 
     def get_character_mods(self):
         return [self.communication, self.reputation, self.skill, self.knowledge, self.responsibility, self.connections]
