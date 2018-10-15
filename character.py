@@ -77,7 +77,7 @@ class Character:
     def set_random_mods(self):
         random_mods = [0, 0, 0, 0, 0, 0]
         while sum(random_mods) < 3:
-            index = random.randint(0, 6)
+            index = random.randint(0, 5)
             if random_mods[index] == 0:
                 random_mods[index] = 1
         self.simple_modify_chars(random_mods)
