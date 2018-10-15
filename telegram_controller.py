@@ -144,8 +144,10 @@ class SprintStarter(telepot.helper.ChatHandler):
 
 
 TOKEN = sys.argv[1]
+PROXY = sys.argv[2]
 
-telepot.api.set_proxy('https://80.35.23.103:54881')
+# https://89.165.218.82:47886
+telepot.api.set_proxy(PROXY)
 
 bot = telepot.DelegatorBot(TOKEN, [
     include_callback_query_chat_id(
