@@ -72,13 +72,17 @@ class Sprint:
 
     def compare_with_desired(self):
         # логика как считать общий результат спринта
-        total_result = True
-        if self.fact_tasks >= self.tasks and self.fact_important_tasks >= self.important_tasks:
+        total_result = False
+        # if self.fact_tasks >= self.tasks and self.fact_important_tasks >= self.important_tasks:
+        #     total_result = True
+        # if self.fact_bugs > self.bugs and self.fact_money < self.money:
+        #     total_result = False
+        # if self.fact_legacy > self.legacy and self.fact_user_happiness < self.user_happiness:
+        #     total_result = False
+        self.money = (self.tasks - self.fact_tasks) + (self.important_tasks - self.fact_important_tasks) - (self.bugs - self.fact_bugs)
+        self.user_happiness = (self.tasks - self.fact_tasks) + (self.important_tasks - self.fact_important_tasks) - (self.legacy - self.fact_legacy)
+        if self.money >= self.fact_money and self.user_happiness >= self.fact_user_happiness:
             total_result = True
-        if self.fact_bugs > self.bugs and self.fact_money < self.money:
-            total_result = False
-        if self.fact_legacy > self.legacy and self.fact_user_happiness < self.user_happiness:
-            total_result = False
 
         result_json = self.get_result_translations()
         if self.fact_tasks < self.tasks:
