@@ -81,7 +81,7 @@ class Sprint:
         #     total_result = False
         self.money = (self.tasks - self.fact_tasks) + (self.important_tasks - self.fact_important_tasks) - (self.bugs - self.fact_bugs)
         self.user_happiness = (self.tasks - self.fact_tasks) + (self.important_tasks - self.fact_important_tasks) - (self.legacy - self.fact_legacy)
-        if self.money >= self.fact_money and self.user_happiness >= self.fact_user_happiness:
+        if self.fact_money >= self.money and self.fact_user_happiness >= self.user_happiness:
             total_result = True
 
         result_json = self.get_result_translations()
